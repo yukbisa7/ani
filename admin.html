@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Steamin Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #loading-overlay { background: rgba(0,0,0,0.7); }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 min-h-screen">
+
+    <!-- LOADING OVERLAY -->
+    <div id="loading-overlay" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+        <div class="bg-white p-5 rounded-lg shadow-lg flex items-center gap-3">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-700"></div>
+            <span class="font-bold text-gray-700">Memproses...</span>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <header id="navbar" class="bg-red-700 text-white p-4 shadow-md sticky top-0 z-40 hidden">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold cursor-pointer" onclick="adminApp.showDashboard()">Admin Panel</h1>
+            <nav class="flex gap-4 text-sm font-medium">
+                <button onclick="adminApp.showDashboard()" class="hover:text-red-200">Dashboard</button>
+                <button onclick="adminApp.logout()" class="bg-red-900 px-3 py-1 rounded hover:bg-red-800">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+
+        <!-- VIEW 1: LOGIN -->
+        <div id="view-login" class="flex items-center justify-center min-h-[80vh]">
+            <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md border-t-4 border-red-700">
+                <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Admin Login</h2>
+                <form onsubmit="adminApp.handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700">Username</label>
+                        <input type="text" id="login-user" class="w-full p-2 border rounded focus:ring-2 focus:ring-red-500 outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700">Password</label>
+                        <input type="password" id="login-pass" class="w-full p-2 border rounded focus:ring-2 focus:ring-red-500 outline-none" required>
+                    </div>
+                    <div id="login-error" class="text-red-500 text-sm text-center font-bold hidden"></div>
+                    <button type="submit" class="w-full bg-red-700 text-white font-bold py-2 rounded hover:bg-red-800 transition">Masuk</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- VIEW 2: DASHBOARD -->
+        <div id="view-dashboard" class="hidden fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Manajemen Konten</h2>
+                <button onclick="adminApp.refreshData()" class="text-blue-600 hover:underline text-sm">Refresh Data</button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Kolom Judul Anime -->
+                <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-red-700">Daftar Judul</h3>
+                        <button onclick="adminApp.showFormTitle()" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">+ Tambah Baru</button>
+                    </div>
+                    <div id="list-titles" class="space-y-3 max-h-[600px] overflow-y-auto pr-2"></div>
+                </div>
+
+                <!-- Kolom Episode -->
+                <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-blue-700">Daftar Episode</h3>
+                        <button onclick="adminApp.showFormEpisode()" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">+ Tambah Episode</button>
+                    </div>
+                    <div id="list-episodes" class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                        <p class="text-gray-400 text-sm italic">Memuat...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 3: FORM TITLE -->
+        <div id="view-form-title" class="hidden fade-in max-w-2xl mx-auto">
+            <h2 id="form-title-heading" class="text-2xl font-bold mb-4 text-gray-800">Tambah Judul Baru</h2>
+            <form onsubmit="adminApp.saveTitle(event)" class="bg-white p-6 rounded-lg shadow space-y-4">
+                <input type="hidden" id="title-original-slug">
+                
+                <!-- INPUT JUDUL DENGAN FITUR AUTO -->
+                <div>
+                    <label class="font-bold text-sm">Judul Anime</label>
+                    <input type="text" id="t-title" oninput="adminApp.autoFill('title')" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Soul Land" required>
+                    <p class="text-xs text-gray-500 mt-1">Slug & ID akan terisi otomatis saat mengetik ini.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 bg-gray-50 p-3 rounded border">
+                    <div>
+                        <label class="font-bold text-sm text-gray-600">ID (Auto)</label>
+                        <input type="text" id="t-id" class="w-full p-2 border rounded bg-gray-100" required>
+                    </div>
+                    <div>
+                        <label class="font-bold text-sm text-gray-600">Slug (Auto)</label>
+                        <input type="text" id="t-slug" class="w-full p-2 border rounded bg-gray-100" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="font-bold text-sm">URL Poster</label>
+                    <input type="text" id="t-poster" class="w-full p-2 border rounded" placeholder="https://..." required>
+                </div>
+                <div>
+                    <label class="font-bold text-sm">Deskripsi</label>
+                    <textarea id="t-desc" class="w-full p-2 border rounded h-24" required></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="font-bold text-sm">Genre</label>
+                        <input type="text" id="t-genre" class="w-full p-2 border rounded" placeholder="Action, Drama" required>
+                    </div>
+                    <div>
+                        <label class="font-bold text-sm">Tahun Rilis</label>
+                        <input type="text" id="t-release" class="w-full p-2 border rounded" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="font-bold text-sm">Status</label>
+                    <select id="t-status" class="w-full p-2 border rounded">
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+
+                <div class="flex gap-3 pt-4 border-t mt-4">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex-1">Simpan</button>
+                    <button type="button" onclick="adminApp.deleteTitle()" id="btn-delete-title" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 hidden">Hapus</button>
+                    <button type="button" onclick="adminApp.showDashboard()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Batal</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- VIEW 4: FORM EPISODE -->
+        <div id="view-form-episode" class="hidden fade-in max-w-2xl mx-auto">
+            <h2 id="form-ep-heading" class="text-2xl font-bold mb-4 text-gray-800">Tambah Episode</h2>
+            <form onsubmit="adminApp.saveEpisode(event)" class="bg-white p-6 rounded-lg shadow space-y-4">
+                <input type="hidden" id="ep-original-slug">
+                
+                <div>
+                    <label class="font-bold text-sm text-red-700">Anime Induk</label>
+                    <select id="ep-parent-slug" class="w-full p-2 border rounded bg-gray-50" required></select>
+                </div>
+                <hr>
+
+                <!-- INPUT JUDUL EPISODE DENGAN FITUR AUTO -->
+                <div>
+                    <label class="font-bold text-sm">Judul Episode</label>
+                    <input type="text" id="ep-title" oninput="adminApp.autoFill('episode')" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Soul Land Episode 1" required>
+                    <p class="text-xs text-gray-500 mt-1">Slug & ID akan terisi otomatis saat mengetik ini.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 bg-gray-50 p-3 rounded border">
+                    <div>
+                        <label class="font-bold text-sm text-gray-600">ID Episode (Auto)</label>
+                        <input type="text" id="ep-id" class="w-full p-2 border rounded bg-gray-100" placeholder="Auto: SLE1" required>
+                    </div>
+                    <div>
+                        <label class="font-bold text-sm text-gray-600">Slug Episode (Auto)</label>
+                        <input type="text" id="ep-slug" class="w-full p-2 border rounded bg-gray-100" placeholder="Auto: soul-land-episode-1" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="font-bold text-sm">URL Video</label>
+                    <input type="text" id="ep-video" class="w-full p-2 border rounded" placeholder="https://..." required>
+                </div>
+                <div>
+                    <label class="font-bold text-sm">Deskripsi</label>
+                    <textarea id="ep-desc" class="w-full p-2 border rounded h-20"></textarea>
+                </div>
+
+                <div class="flex gap-3 pt-4 border-t mt-4">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex-1">Simpan</button>
+                    <button type="button" onclick="adminApp.deleteEpisode()" id="btn-delete-ep" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 hidden">Hapus</button>
+                    <button type="button" onclick="adminApp.showDashboard()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Batal</button>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <script>
+        const API_URL = 'https://hosting.nakibo8225.workers.dev/json/b22b00540aee';
+
+        const adminApp = {
+            data: { titles: [], users: [] },
+            
+            // --- FUNGSI BARU: AUTO GENERATE SLUG & ID ---
+            autoFill: function(type) {
+                // type = 'title' atau 'episode'
+                
+                // 1. Cek Mode: Jika sedang Edit (slug asli ada isinya), HENTIKAN auto fill.
+                // Kita tidak ingin merusak link SEO yang sudah ada saat mengedit typo judul.
+                const originalSlugField = document.getElementById(type === 'title' ? 'title-original-slug' : 'ep-original-slug');
+                if (originalSlugField.value !== "") return;
+
+                // Ambil nilai Input Judul
+                const inputId = type === 'title' ? 't-title' : 'ep-title';
+                const text = document.getElementById(inputId).value;
+
+                // --- LOGIKA ID (SLE1) ---
+                // Ambil huruf pertama tiap kata. Jika kata itu angka, ambil angkanya.
+                const words = text.split(' ');
+                let generatedId = "";
+                words.forEach(word => {
+                    if (word.length > 0) {
+                        generatedId += word.charAt(0).toUpperCase(); // Ambil huruf depan & Kapital
+                    }
+                });
+                // Bersihkan ID dari simbol aneh, hanya huruf dan angka
+                generatedId = generatedId.replace(/[^A-Z0-9]/g, '');
+
+                // --- LOGIKA SLUG (soul-land) ---
+                // Kecilkan semua, spasi jadi strip, hapus simbol aneh
+                const generatedSlug = text.toLowerCase()
+                    .replace(/[^a-z0-9\s]/g, '') // Hapus simbol selain huruf/angka/spasi
+                    .trim()
+                    .replace(/\s+/g, '-');       // Spasi jadi -
+
+                // Isi ke Kolom
+                if (type === 'title') {
+                    document.getElementById('t-id').value = generatedId;
+                    document.getElementById('t-slug').value = generatedSlug;
+                } else {
+                    document.getElementById('ep-id').value = generatedId;
+                    document.getElementById('ep-slug').value = generatedSlug;
+                }
+            },
+            // ---------------------------------------------
+
+            init: function() {
+                if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                    this.fetchDataAndShowDashboard();
+                } else {
+                    this.showView('view-login');
+                }
+            },
+
+            handleLogin: async function(e) {
+                e.preventDefault();
+                const u = document.getElementById('login-user').value;
+                const p = document.getElementById('login-pass').value;
+                const err = document.getElementById('login-error');
+                this.toggleLoading(true);
+                try {
+                    const res = await fetch(API_URL);
+                    const json = await res.json();
+                    const user = json.users ? json.users.find(user => user.username === u && user.password === p) : null;
+                    if (user) {
+                        sessionStorage.setItem('isLoggedIn', 'true');
+                        this.data = json;
+                        this.renderDashboard();
+                        this.showView('view-dashboard');
+                    } else {
+                        err.innerText = "Login Gagal!";
+                        err.classList.remove('hidden');
+                    }
+                } catch (error) { alert("Gagal koneksi."); }
+                this.toggleLoading(false);
+            },
+
+            logout: function() {
+                sessionStorage.clear();
+                window.location.reload();
+            },
+
+            fetchDataAndShowDashboard: async function() {
+                this.toggleLoading(true);
+                try {
+                    const res = await fetch(API_URL);
+                    this.data = await res.json();
+                    if(!this.data.titles) this.data.titles = [];
+                    this.renderDashboard();
+                    this.showView('view-dashboard');
+                } catch (error) { alert("Gagal memuat data."); }
+                this.toggleLoading(false);
+            },
+
+            refreshData: function() { this.fetchDataAndShowDashboard(); },
+
+            saveToApi: async function() {
+                this.toggleLoading(true);
+                try {
+                    await fetch(API_URL, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(this.data)
+                    });
+                    this.toggleLoading(false);
+                    return true;
+                } catch (error) {
+                    this.toggleLoading(false);
+                    alert("Gagal simpan.");
+                    return false;
+                }
+            },
+
+            renderDashboard: function() {
+                const titleContainer = document.getElementById('list-titles');
+                titleContainer.innerHTML = this.data.titles.length ? this.data.titles.map(t => `
+                    <div class="bg-gray-50 p-3 rounded border flex justify-between items-center hover:bg-gray-100">
+                        <div>
+                            <div class="font-bold text-gray-800">${t.title}</div>
+                            <div class="text-xs text-gray-500">ID: ${t.id} | Slug: ${t.slug}</div>
+                        </div>
+                        <button onclick="adminApp.editTitle('${t.slug}')" class="text-blue-600 font-bold border border-blue-200 px-2 rounded hover:bg-blue-100">Edit</button>
+                    </div>
+                `).join('') : '<p class="text-gray-400">Data Kosong</p>';
+
+                const epContainer = document.getElementById('list-episodes');
+                let epHtml = '';
+                this.data.titles.forEach(t => {
+                    if (t.episodes && t.episodes.length > 0) {
+                        epHtml += `<div class="mb-4"><h4 class="font-bold text-gray-600 text-sm mb-2 border-b">${t.title}</h4>`;
+                        t.episodes.forEach(e => {
+                            epHtml += `
+                                <div class="flex justify-between items-center py-1 pl-2 border-l-2 border-gray-300 hover:border-red-500 mb-1">
+                                    <span class="text-sm truncate w-2/3">${e.title} <span class="text-gray-400 text-xs">(${e.id})</span></span>
+                                    <button onclick="adminApp.editEpisode('${t.slug}', '${e.slug}')" class="text-xs text-blue-600 underline">Edit</button>
+                                </div>
+                            `;
+                        });
+                        epHtml += `</div>`;
+                    }
+                });
+                epContainer.innerHTML = epHtml || '<p class="text-gray-400">Belum ada episode.</p>';
+            },
+
+            showFormTitle: function() {
+                document.getElementById('form-title-heading').innerText = "Tambah Anime Baru";
+                document.getElementById('title-original-slug').value = ""; // Mode Create
+                document.getElementById('btn-delete-title').classList.add('hidden');
+                ['t-id', 't-slug', 't-title', 't-poster', 't-desc', 't-genre', 't-release'].forEach(id => document.getElementById(id).value = "");
+                this.showView('view-form-title');
+            },
+
+            editTitle: function(slug) {
+                const t = this.data.titles.find(x => x.slug === slug);
+                if(!t) return;
+                document.getElementById('form-title-heading').innerText = "Edit Anime";
+                document.getElementById('title-original-slug').value = t.slug; // Mode Edit
+                document.getElementById('btn-delete-title').classList.remove('hidden');
+                
+                document.getElementById('t-id').value = t.id;
+                document.getElementById('t-slug').value = t.slug;
+                document.getElementById('t-title').value = t.title;
+                document.getElementById('t-poster').value = t.poster;
+                document.getElementById('t-desc').value = t.description;
+                document.getElementById('t-genre').value = Array.isArray(t.genre) ? t.genre.join(', ') : t.genre;
+                document.getElementById('t-release').value = t.release_date;
+                document.getElementById('t-status').value = t.status;
+                this.showView('view-form-title');
+            },
+
+            saveTitle: async function(e) {
+                e.preventDefault();
+                const originalSlug = document.getElementById('title-original-slug').value;
+                const newObj = {
+                    id: document.getElementById('t-id').value,
+                    slug: document.getElementById('t-slug').value,
+                    title: document.getElementById('t-title').value,
+                    poster: document.getElementById('t-poster').value,
+                    description: document.getElementById('t-desc').value,
+                    genre: document.getElementById('t-genre').value.split(',').map(s => s.trim()),
+                    release_date: document.getElementById('t-release').value,
+                    status: document.getElementById('t-status').value,
+                    episodes: []
+                };
+
+                if (originalSlug) {
+                    const index = this.data.titles.findIndex(t => t.slug === originalSlug);
+                    if(index !== -1) {
+                        newObj.episodes = this.data.titles[index].episodes;
+                        this.data.titles[index] = newObj;
+                    }
+                } else {
+                    if(this.data.titles.find(t => t.slug === newObj.slug)) return alert("Slug sudah ada!");
+                    this.data.titles.push(newObj);
+                }
+                if(await this.saveToApi()) {
+                    this.renderDashboard();
+                    this.showView('view-dashboard');
+                }
+            },
+
+            deleteTitle: async function() {
+                if(!confirm("Yakin hapus?")) return;
+                const slug = document.getElementById('title-original-slug').value;
+                this.data.titles = this.data.titles.filter(t => t.slug !== slug);
+                if(await this.saveToApi()) {
+                    this.renderDashboard();
+                    this.showView('view-dashboard');
+                }
+            },
+
+            showFormEpisode: function() {
+                const select = document.getElementById('ep-parent-slug');
+                select.innerHTML = '<option value="">-- Pilih Anime --</option>';
+                this.data.titles.forEach(t => select.innerHTML += `<option value="${t.slug}">${t.title}</option>`);
+                select.disabled = false;
+                document.getElementById('form-ep-heading').innerText = "Tambah Episode Baru";
+                document.getElementById('ep-original-slug').value = ""; // Mode Create
+                document.getElementById('btn-delete-ep').classList.add('hidden');
+                ['ep-id', 'ep-slug', 'ep-title', 'ep-video', 'ep-desc'].forEach(id => document.getElementById(id).value = "");
+                this.showView('view-form-episode');
+            },
+
+            editEpisode: function(titleSlug, epSlug) {
+                const title = this.data.titles.find(t => t.slug === titleSlug);
+                const ep = title ? title.episodes.find(e => e.slug === epSlug) : null;
+                if(!ep) return;
+                const select = document.getElementById('ep-parent-slug');
+                select.innerHTML = `<option value="${title.slug}">${title.title}</option>`;
+                select.value = title.slug;
+                select.disabled = true;
+                document.getElementById('form-ep-heading').innerText = "Edit Episode";
+                document.getElementById('ep-original-slug').value = ep.slug; // Mode Edit
+                document.getElementById('btn-delete-ep').classList.remove('hidden');
+                document.getElementById('ep-id').value = ep.id;
+                document.getElementById('ep-slug').value = ep.slug;
+                document.getElementById('ep-title').value = ep.title;
+                document.getElementById('ep-video').value = ep.video_url;
+                document.getElementById('ep-desc').value = ep.description;
+                this.showView('view-form-episode');
+            },
+
+            saveEpisode: async function(e) {
+                e.preventDefault();
+                const parentSlug = document.getElementById('ep-parent-slug').value;
+                if(!parentSlug) return alert("Pilih Anime!");
+                const originalEpSlug = document.getElementById('ep-original-slug').value;
+                const titleIndex = this.data.titles.findIndex(t => t.slug === parentSlug);
+                const newEp = {
+                    id: document.getElementById('ep-id').value,
+                    slug: document.getElementById('ep-slug').value,
+                    title: document.getElementById('ep-title').value,
+                    video_url: document.getElementById('ep-video').value,
+                    description: document.getElementById('ep-desc').value
+                };
+                const episodes = this.data.titles[titleIndex].episodes || [];
+                if (originalEpSlug) {
+                    const epIndex = episodes.findIndex(e => e.slug === originalEpSlug);
+                    if(epIndex !== -1) episodes[epIndex] = newEp;
+                } else {
+                    episodes.push(newEp);
+                }
+                this.data.titles[titleIndex].episodes = episodes;
+                if(await this.saveToApi()) {
+                    this.renderDashboard();
+                    this.showView('view-dashboard');
+                }
+            },
+
+            deleteEpisode: async function() {
+                if(!confirm("Yakin hapus?")) return;
+                const parentSlug = document.getElementById('ep-parent-slug').value;
+                const epSlug = document.getElementById('ep-original-slug').value;
+                const tIndex = this.data.titles.findIndex(t => t.slug === parentSlug);
+                if(tIndex !== -1) {
+                    this.data.titles[tIndex].episodes = this.data.titles[tIndex].episodes.filter(e => e.slug !== epSlug);
+                    if(await this.saveToApi()) {
+                        this.renderDashboard();
+                        this.showView('view-dashboard');
+                    }
+                }
+            },
+
+            showView: function(viewId) {
+                ['view-login', 'view-dashboard', 'view-form-title', 'view-form-episode'].forEach(id => document.getElementById(id).classList.add('hidden'));
+                document.getElementById(viewId).classList.remove('hidden');
+                const navbar = document.getElementById('navbar');
+                viewId === 'view-login' ? navbar.classList.add('hidden') : navbar.classList.remove('hidden');
+            },
+
+            toggleLoading: function(show) {
+                const el = document.getElementById('loading-overlay');
+                show ? el.classList.remove('hidden') : el.classList.add('hidden');
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => adminApp.init());
+    </script>
+</body>
+</html>
