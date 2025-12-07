@@ -24,10 +24,10 @@
     <!-- NAVBAR -->
     <header id="navbar" class="bg-red-700 text-white p-4 shadow-md sticky top-0 z-40 hidden">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold cursor-pointer" onclick="adminApp.showDashboard()">Admin Panel</h1>
+            <h1 class="text-xl font-bold cursor-pointer hover:text-red-200" onclick="window.adminApp.showDashboard()">Admin Panel</h1>
             <nav class="flex gap-4 text-sm font-medium">
-                <button onclick="adminApp.showDashboard()" class="hover:text-red-200">Dashboard</button>
-                <button onclick="adminApp.logout()" class="bg-red-900 px-3 py-1 rounded hover:bg-red-800">Logout</button>
+                <button type="button" onclick="window.adminApp.showDashboard()" class="hover:text-red-200 focus:outline-none">Dashboard</button>
+                <button type="button" onclick="window.adminApp.logout()" class="bg-red-900 px-3 py-1 rounded hover:bg-red-800 focus:outline-none">Logout</button>
             </nav>
         </div>
     </header>
@@ -38,7 +38,7 @@
         <div id="view-login" class="flex items-center justify-center min-h-[80vh]">
             <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md border-t-4 border-red-700">
                 <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Admin Login</h2>
-                <form onsubmit="adminApp.handleLogin(event)" class="space-y-4">
+                <form onsubmit="window.adminApp.handleLogin(event)" class="space-y-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700">Username</label>
                         <input type="text" id="login-user" class="w-full p-2 border rounded focus:ring-2 focus:ring-red-500 outline-none" required>
@@ -57,7 +57,7 @@
         <div id="view-dashboard" class="hidden fade-in">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">Manajemen Konten</h2>
-                <button onclick="adminApp.refreshData()" class="text-blue-600 hover:underline text-sm">Refresh Data</button>
+                <button type="button" onclick="window.adminApp.refreshData()" class="text-blue-600 hover:underline text-sm">Refresh Data</button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -65,7 +65,7 @@
                 <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold text-red-700">Daftar Judul</h3>
-                        <button onclick="adminApp.showFormTitle()" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">+ Tambah Baru</button>
+                        <button type="button" onclick="window.adminApp.showFormTitle()" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">+ Tambah Baru</button>
                     </div>
                     <div id="list-titles" class="space-y-3 max-h-[600px] overflow-y-auto pr-2"></div>
                 </div>
@@ -74,7 +74,7 @@
                 <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold text-blue-700">Daftar Episode</h3>
-                        <button onclick="adminApp.showFormEpisode()" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">+ Tambah Episode</button>
+                        <button type="button" onclick="window.adminApp.showFormEpisode()" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">+ Tambah Episode</button>
                     </div>
                     <div id="list-episodes" class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
                         <p class="text-gray-400 text-sm italic">Memuat...</p>
@@ -86,14 +86,13 @@
         <!-- VIEW 3: FORM TITLE -->
         <div id="view-form-title" class="hidden fade-in max-w-2xl mx-auto">
             <h2 id="form-title-heading" class="text-2xl font-bold mb-4 text-gray-800">Tambah Judul Baru</h2>
-            <form onsubmit="adminApp.saveTitle(event)" class="bg-white p-6 rounded-lg shadow space-y-4">
+            <form onsubmit="window.adminApp.saveTitle(event)" class="bg-white p-6 rounded-lg shadow space-y-4">
                 <input type="hidden" id="title-original-slug">
                 
-                <!-- INPUT JUDUL DENGAN FITUR AUTO -->
                 <div>
                     <label class="font-bold text-sm">Judul Anime</label>
-                    <input type="text" id="t-title" oninput="adminApp.autoFill('title')" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Soul Land" required>
-                    <p class="text-xs text-gray-500 mt-1">Slug & ID akan terisi otomatis saat mengetik ini.</p>
+                    <input type="text" id="t-title" oninput="window.adminApp.autoFill('title')" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Soul Land" required>
+                    <p class="text-xs text-gray-500 mt-1">Slug & ID akan terisi otomatis.</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 bg-gray-50 p-3 rounded border">
@@ -135,8 +134,8 @@
 
                 <div class="flex gap-3 pt-4 border-t mt-4">
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex-1">Simpan</button>
-                    <button type="button" onclick="adminApp.deleteTitle()" id="btn-delete-title" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 hidden">Hapus</button>
-                    <button type="button" onclick="adminApp.showDashboard()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Batal</button>
+                    <button type="button" onclick="window.adminApp.deleteTitle()" id="btn-delete-title" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 hidden">Hapus</button>
+                    <button type="button" onclick="window.adminApp.showDashboard()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Batal</button>
                 </div>
             </form>
         </div>
@@ -144,7 +143,7 @@
         <!-- VIEW 4: FORM EPISODE -->
         <div id="view-form-episode" class="hidden fade-in max-w-2xl mx-auto">
             <h2 id="form-ep-heading" class="text-2xl font-bold mb-4 text-gray-800">Tambah Episode</h2>
-            <form onsubmit="adminApp.saveEpisode(event)" class="bg-white p-6 rounded-lg shadow space-y-4">
+            <form onsubmit="window.adminApp.saveEpisode(event)" class="bg-white p-6 rounded-lg shadow space-y-4">
                 <input type="hidden" id="ep-original-slug">
                 
                 <div>
@@ -152,22 +151,20 @@
                     <select id="ep-parent-slug" class="w-full p-2 border rounded bg-gray-50" required></select>
                 </div>
                 <hr>
-
-                <!-- INPUT JUDUL EPISODE DENGAN FITUR AUTO -->
                 <div>
                     <label class="font-bold text-sm">Judul Episode</label>
-                    <input type="text" id="ep-title" oninput="adminApp.autoFill('episode')" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Soul Land Episode 1" required>
-                    <p class="text-xs text-gray-500 mt-1">Slug & ID akan terisi otomatis saat mengetik ini.</p>
+                    <input type="text" id="ep-title" oninput="window.adminApp.autoFill('episode')" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Soul Land Episode 1" required>
+                    <p class="text-xs text-gray-500 mt-1">Slug & ID akan terisi otomatis.</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 bg-gray-50 p-3 rounded border">
                     <div>
                         <label class="font-bold text-sm text-gray-600">ID Episode (Auto)</label>
-                        <input type="text" id="ep-id" class="w-full p-2 border rounded bg-gray-100" placeholder="Auto: SLE1" required>
+                        <input type="text" id="ep-id" class="w-full p-2 border rounded bg-gray-100" required>
                     </div>
                     <div>
                         <label class="font-bold text-sm text-gray-600">Slug Episode (Auto)</label>
-                        <input type="text" id="ep-slug" class="w-full p-2 border rounded bg-gray-100" placeholder="Auto: soul-land-episode-1" required>
+                        <input type="text" id="ep-slug" class="w-full p-2 border rounded bg-gray-100" required>
                     </div>
                 </div>
 
@@ -182,8 +179,8 @@
 
                 <div class="flex gap-3 pt-4 border-t mt-4">
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex-1">Simpan</button>
-                    <button type="button" onclick="adminApp.deleteEpisode()" id="btn-delete-ep" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 hidden">Hapus</button>
-                    <button type="button" onclick="adminApp.showDashboard()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Batal</button>
+                    <button type="button" onclick="window.adminApp.deleteEpisode()" id="btn-delete-ep" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 hidden">Hapus</button>
+                    <button type="button" onclick="window.adminApp.showDashboard()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Batal</button>
                 </div>
             </form>
         </div>
@@ -193,141 +190,143 @@
     <script>
         const API_URL = 'https://hosting.nakibo8225.workers.dev/json/b22b00540aee';
 
-        const adminApp = {
+        // Menggunakan window.adminApp agar pasti global accessible
+        window.adminApp = {
             data: { titles: [], users: [] },
             
-            // --- FUNGSI BARU: AUTO GENERATE SLUG & ID ---
+            // --- AUTO GENERATE ---
             autoFill: function(type) {
-                // type = 'title' atau 'episode'
+                const isTitle = type === 'title';
+                const originalSlug = document.getElementById(isTitle ? 'title-original-slug' : 'ep-original-slug').value;
+                if (originalSlug !== "") return; // Jangan ubah kalau lagi mode Edit
+
+                const text = document.getElementById(isTitle ? 't-title' : 'ep-title').value;
                 
-                // 1. Cek Mode: Jika sedang Edit (slug asli ada isinya), HENTIKAN auto fill.
-                // Kita tidak ingin merusak link SEO yang sudah ada saat mengedit typo judul.
-                const originalSlugField = document.getElementById(type === 'title' ? 'title-original-slug' : 'ep-original-slug');
-                if (originalSlugField.value !== "") return;
+                // ID: Huruf depan tiap kata + Angka
+                const generatedId = text.split(' ')
+                    .map(word => word.charAt(0).toUpperCase())
+                    .join('')
+                    .replace(/[^A-Z0-9]/g, '');
 
-                // Ambil nilai Input Judul
-                const inputId = type === 'title' ? 't-title' : 'ep-title';
-                const text = document.getElementById(inputId).value;
-
-                // --- LOGIKA ID (SLE1) ---
-                // Ambil huruf pertama tiap kata. Jika kata itu angka, ambil angkanya.
-                const words = text.split(' ');
-                let generatedId = "";
-                words.forEach(word => {
-                    if (word.length > 0) {
-                        generatedId += word.charAt(0).toUpperCase(); // Ambil huruf depan & Kapital
-                    }
-                });
-                // Bersihkan ID dari simbol aneh, hanya huruf dan angka
-                generatedId = generatedId.replace(/[^A-Z0-9]/g, '');
-
-                // --- LOGIKA SLUG (soul-land) ---
-                // Kecilkan semua, spasi jadi strip, hapus simbol aneh
+                // Slug: lowercase, spasi jadi dash
                 const generatedSlug = text.toLowerCase()
-                    .replace(/[^a-z0-9\s]/g, '') // Hapus simbol selain huruf/angka/spasi
+                    .replace(/[^a-z0-9\s]/g, '')
                     .trim()
-                    .replace(/\s+/g, '-');       // Spasi jadi -
+                    .replace(/\s+/g, '-');
 
-                // Isi ke Kolom
-                if (type === 'title') {
-                    document.getElementById('t-id').value = generatedId;
-                    document.getElementById('t-slug').value = generatedSlug;
-                } else {
-                    document.getElementById('ep-id').value = generatedId;
-                    document.getElementById('ep-slug').value = generatedSlug;
-                }
+                document.getElementById(isTitle ? 't-id' : 'ep-id').value = generatedId;
+                document.getElementById(isTitle ? 't-slug' : 'ep-slug').value = generatedSlug;
             },
-            // ---------------------------------------------
 
+            // --- INIT ---
             init: function() {
                 if (sessionStorage.getItem('isLoggedIn') === 'true') {
-                    this.fetchDataAndShowDashboard();
+                    adminApp.fetchDataAndShowDashboard();
                 } else {
-                    this.showView('view-login');
+                    adminApp.showView('view-login');
                 }
             },
 
+            // --- AUTH ---
             handleLogin: async function(e) {
                 e.preventDefault();
                 const u = document.getElementById('login-user').value;
                 const p = document.getElementById('login-pass').value;
                 const err = document.getElementById('login-error');
-                this.toggleLoading(true);
+                
+                adminApp.toggleLoading(true);
                 try {
                     const res = await fetch(API_URL);
                     const json = await res.json();
-                    const user = json.users ? json.users.find(user => user.username === u && user.password === p) : null;
-                    if (user) {
+                    
+                    // Cek user
+                    const validUser = json.users ? json.users.find(user => user.username === u && user.password === p) : null;
+                    
+                    if (validUser) {
                         sessionStorage.setItem('isLoggedIn', 'true');
-                        this.data = json;
-                        this.renderDashboard();
-                        this.showView('view-dashboard');
+                        adminApp.data = json;
+                        adminApp.renderDashboard();
+                        adminApp.showView('view-dashboard');
                     } else {
                         err.innerText = "Login Gagal!";
                         err.classList.remove('hidden');
                     }
-                } catch (error) { alert("Gagal koneksi."); }
-                this.toggleLoading(false);
+                } catch (error) { 
+                    alert("Gagal koneksi server."); 
+                }
+                adminApp.toggleLoading(false);
             },
 
             logout: function() {
                 sessionStorage.clear();
-                window.location.reload();
+                location.reload();
             },
 
+            // --- DATA ---
             fetchDataAndShowDashboard: async function() {
-                this.toggleLoading(true);
+                adminApp.toggleLoading(true);
                 try {
                     const res = await fetch(API_URL);
-                    this.data = await res.json();
-                    if(!this.data.titles) this.data.titles = [];
-                    this.renderDashboard();
-                    this.showView('view-dashboard');
-                } catch (error) { alert("Gagal memuat data."); }
-                this.toggleLoading(false);
+                    adminApp.data = await res.json();
+                    if (!adminApp.data.titles) adminApp.data.titles = [];
+                    adminApp.renderDashboard();
+                    adminApp.showView('view-dashboard');
+                } catch (error) { 
+                    alert("Gagal ambil data."); 
+                }
+                adminApp.toggleLoading(false);
             },
 
-            refreshData: function() { this.fetchDataAndShowDashboard(); },
+            refreshData: function() {
+                adminApp.fetchDataAndShowDashboard();
+            },
 
             saveToApi: async function() {
-                this.toggleLoading(true);
+                adminApp.toggleLoading(true);
                 try {
                     await fetch(API_URL, {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(this.data)
+                        body: JSON.stringify(adminApp.data)
                     });
-                    this.toggleLoading(false);
+                    adminApp.toggleLoading(false);
                     return true;
                 } catch (error) {
-                    this.toggleLoading(false);
-                    alert("Gagal simpan.");
+                    adminApp.toggleLoading(false);
+                    alert("Gagal simpan ke server.");
                     return false;
                 }
             },
 
+            // --- RENDER ---
             renderDashboard: function() {
+                // Render Judul
                 const titleContainer = document.getElementById('list-titles');
-                titleContainer.innerHTML = this.data.titles.length ? this.data.titles.map(t => `
-                    <div class="bg-gray-50 p-3 rounded border flex justify-between items-center hover:bg-gray-100">
-                        <div>
-                            <div class="font-bold text-gray-800">${t.title}</div>
-                            <div class="text-xs text-gray-500">ID: ${t.id} | Slug: ${t.slug}</div>
+                if(!adminApp.data.titles.length) {
+                    titleContainer.innerHTML = '<p class="text-gray-400">Data Kosong</p>';
+                } else {
+                    titleContainer.innerHTML = adminApp.data.titles.map(t => `
+                        <div class="bg-gray-50 p-3 rounded border flex justify-between items-center hover:bg-gray-100">
+                            <div>
+                                <div class="font-bold text-gray-800">${t.title}</div>
+                                <div class="text-xs text-gray-500">ID: ${t.id}</div>
+                            </div>
+                            <button onclick="window.adminApp.editTitle('${t.slug}')" class="text-blue-600 font-bold border border-blue-200 px-2 rounded hover:bg-blue-100">Edit</button>
                         </div>
-                        <button onclick="adminApp.editTitle('${t.slug}')" class="text-blue-600 font-bold border border-blue-200 px-2 rounded hover:bg-blue-100">Edit</button>
-                    </div>
-                `).join('') : '<p class="text-gray-400">Data Kosong</p>';
+                    `).join('');
+                }
 
+                // Render Episodes
                 const epContainer = document.getElementById('list-episodes');
                 let epHtml = '';
-                this.data.titles.forEach(t => {
+                adminApp.data.titles.forEach(t => {
                     if (t.episodes && t.episodes.length > 0) {
                         epHtml += `<div class="mb-4"><h4 class="font-bold text-gray-600 text-sm mb-2 border-b">${t.title}</h4>`;
                         t.episodes.forEach(e => {
                             epHtml += `
                                 <div class="flex justify-between items-center py-1 pl-2 border-l-2 border-gray-300 hover:border-red-500 mb-1">
-                                    <span class="text-sm truncate w-2/3">${e.title} <span class="text-gray-400 text-xs">(${e.id})</span></span>
-                                    <button onclick="adminApp.editEpisode('${t.slug}', '${e.slug}')" class="text-xs text-blue-600 underline">Edit</button>
+                                    <span class="text-sm truncate w-2/3">${e.title}</span>
+                                    <button onclick="window.adminApp.editEpisode('${t.slug}', '${e.slug}')" class="text-xs text-blue-600 underline">Edit</button>
                                 </div>
                             `;
                         });
@@ -337,19 +336,21 @@
                 epContainer.innerHTML = epHtml || '<p class="text-gray-400">Belum ada episode.</p>';
             },
 
+            // --- TITLE ACTIONS ---
             showFormTitle: function() {
                 document.getElementById('form-title-heading').innerText = "Tambah Anime Baru";
-                document.getElementById('title-original-slug').value = ""; // Mode Create
+                document.getElementById('title-original-slug').value = ""; 
                 document.getElementById('btn-delete-title').classList.add('hidden');
+                // Reset fields
                 ['t-id', 't-slug', 't-title', 't-poster', 't-desc', 't-genre', 't-release'].forEach(id => document.getElementById(id).value = "");
-                this.showView('view-form-title');
+                adminApp.showView('view-form-title');
             },
 
             editTitle: function(slug) {
-                const t = this.data.titles.find(x => x.slug === slug);
+                const t = adminApp.data.titles.find(x => x.slug === slug);
                 if(!t) return;
                 document.getElementById('form-title-heading').innerText = "Edit Anime";
-                document.getElementById('title-original-slug').value = t.slug; // Mode Edit
+                document.getElementById('title-original-slug').value = t.slug;
                 document.getElementById('btn-delete-title').classList.remove('hidden');
                 
                 document.getElementById('t-id').value = t.id;
@@ -360,7 +361,7 @@
                 document.getElementById('t-genre').value = Array.isArray(t.genre) ? t.genre.join(', ') : t.genre;
                 document.getElementById('t-release').value = t.release_date;
                 document.getElementById('t-status').value = t.status;
-                this.showView('view-form-title');
+                adminApp.showView('view-form-title');
             },
 
             saveTitle: async function(e) {
@@ -379,68 +380,76 @@
                 };
 
                 if (originalSlug) {
-                    const index = this.data.titles.findIndex(t => t.slug === originalSlug);
+                    const index = adminApp.data.titles.findIndex(t => t.slug === originalSlug);
                     if(index !== -1) {
-                        newObj.episodes = this.data.titles[index].episodes;
-                        this.data.titles[index] = newObj;
+                        newObj.episodes = adminApp.data.titles[index].episodes;
+                        adminApp.data.titles[index] = newObj;
                     }
                 } else {
-                    if(this.data.titles.find(t => t.slug === newObj.slug)) return alert("Slug sudah ada!");
-                    this.data.titles.push(newObj);
+                    if(adminApp.data.titles.find(t => t.slug === newObj.slug)) return alert("Slug sudah ada!");
+                    adminApp.data.titles.push(newObj);
                 }
-                if(await this.saveToApi()) {
-                    this.renderDashboard();
-                    this.showView('view-dashboard');
+                
+                if(await adminApp.saveToApi()) {
+                    adminApp.renderDashboard();
+                    adminApp.showView('view-dashboard');
                 }
             },
 
             deleteTitle: async function() {
                 if(!confirm("Yakin hapus?")) return;
                 const slug = document.getElementById('title-original-slug').value;
-                this.data.titles = this.data.titles.filter(t => t.slug !== slug);
-                if(await this.saveToApi()) {
-                    this.renderDashboard();
-                    this.showView('view-dashboard');
+                adminApp.data.titles = adminApp.data.titles.filter(t => t.slug !== slug);
+                if(await adminApp.saveToApi()) {
+                    adminApp.renderDashboard();
+                    adminApp.showView('view-dashboard');
                 }
             },
 
+            // --- EPISODE ACTIONS ---
             showFormEpisode: function() {
                 const select = document.getElementById('ep-parent-slug');
                 select.innerHTML = '<option value="">-- Pilih Anime --</option>';
-                this.data.titles.forEach(t => select.innerHTML += `<option value="${t.slug}">${t.title}</option>`);
+                adminApp.data.titles.forEach(t => select.innerHTML += `<option value="${t.slug}">${t.title}</option>`);
                 select.disabled = false;
+                
                 document.getElementById('form-ep-heading').innerText = "Tambah Episode Baru";
-                document.getElementById('ep-original-slug').value = ""; // Mode Create
+                document.getElementById('ep-original-slug').value = "";
                 document.getElementById('btn-delete-ep').classList.add('hidden');
                 ['ep-id', 'ep-slug', 'ep-title', 'ep-video', 'ep-desc'].forEach(id => document.getElementById(id).value = "");
-                this.showView('view-form-episode');
+                adminApp.showView('view-form-episode');
             },
 
             editEpisode: function(titleSlug, epSlug) {
-                const title = this.data.titles.find(t => t.slug === titleSlug);
+                const title = adminApp.data.titles.find(t => t.slug === titleSlug);
                 const ep = title ? title.episodes.find(e => e.slug === epSlug) : null;
                 if(!ep) return;
+
                 const select = document.getElementById('ep-parent-slug');
                 select.innerHTML = `<option value="${title.slug}">${title.title}</option>`;
                 select.value = title.slug;
                 select.disabled = true;
+
                 document.getElementById('form-ep-heading').innerText = "Edit Episode";
-                document.getElementById('ep-original-slug').value = ep.slug; // Mode Edit
+                document.getElementById('ep-original-slug').value = ep.slug;
                 document.getElementById('btn-delete-ep').classList.remove('hidden');
+
                 document.getElementById('ep-id').value = ep.id;
                 document.getElementById('ep-slug').value = ep.slug;
                 document.getElementById('ep-title').value = ep.title;
                 document.getElementById('ep-video').value = ep.video_url;
                 document.getElementById('ep-desc').value = ep.description;
-                this.showView('view-form-episode');
+                adminApp.showView('view-form-episode');
             },
 
             saveEpisode: async function(e) {
                 e.preventDefault();
                 const parentSlug = document.getElementById('ep-parent-slug').value;
                 if(!parentSlug) return alert("Pilih Anime!");
+                
                 const originalEpSlug = document.getElementById('ep-original-slug').value;
-                const titleIndex = this.data.titles.findIndex(t => t.slug === parentSlug);
+                const tIndex = adminApp.data.titles.findIndex(t => t.slug === parentSlug);
+                
                 const newEp = {
                     id: document.getElementById('ep-id').value,
                     slug: document.getElementById('ep-slug').value,
@@ -448,17 +457,19 @@
                     video_url: document.getElementById('ep-video').value,
                     description: document.getElementById('ep-desc').value
                 };
-                const episodes = this.data.titles[titleIndex].episodes || [];
+
+                const episodes = adminApp.data.titles[tIndex].episodes || [];
                 if (originalEpSlug) {
                     const epIndex = episodes.findIndex(e => e.slug === originalEpSlug);
                     if(epIndex !== -1) episodes[epIndex] = newEp;
                 } else {
                     episodes.push(newEp);
                 }
-                this.data.titles[titleIndex].episodes = episodes;
-                if(await this.saveToApi()) {
-                    this.renderDashboard();
-                    this.showView('view-dashboard');
+                adminApp.data.titles[tIndex].episodes = episodes;
+
+                if(await adminApp.saveToApi()) {
+                    adminApp.renderDashboard();
+                    adminApp.showView('view-dashboard');
                 }
             },
 
@@ -466,30 +477,45 @@
                 if(!confirm("Yakin hapus?")) return;
                 const parentSlug = document.getElementById('ep-parent-slug').value;
                 const epSlug = document.getElementById('ep-original-slug').value;
-                const tIndex = this.data.titles.findIndex(t => t.slug === parentSlug);
+                const tIndex = adminApp.data.titles.findIndex(t => t.slug === parentSlug);
+                
                 if(tIndex !== -1) {
-                    this.data.titles[tIndex].episodes = this.data.titles[tIndex].episodes.filter(e => e.slug !== epSlug);
-                    if(await this.saveToApi()) {
-                        this.renderDashboard();
-                        this.showView('view-dashboard');
+                    adminApp.data.titles[tIndex].episodes = adminApp.data.titles[tIndex].episodes.filter(e => e.slug !== epSlug);
+                    if(await adminApp.saveToApi()) {
+                        adminApp.renderDashboard();
+                        adminApp.showView('view-dashboard');
                     }
                 }
             },
 
+            // --- VIEW CONTROL ---
+            showDashboard: function() {
+                if (sessionStorage.getItem('isLoggedIn') !== 'true') return adminApp.showView('view-login');
+                adminApp.showView('view-dashboard');
+            },
+
             showView: function(viewId) {
-                ['view-login', 'view-dashboard', 'view-form-title', 'view-form-episode'].forEach(id => document.getElementById(id).classList.add('hidden'));
+                ['view-login', 'view-dashboard', 'view-form-title', 'view-form-episode'].forEach(id => {
+                    document.getElementById(id).classList.add('hidden');
+                });
                 document.getElementById(viewId).classList.remove('hidden');
+                
                 const navbar = document.getElementById('navbar');
-                viewId === 'view-login' ? navbar.classList.add('hidden') : navbar.classList.remove('hidden');
+                if(viewId === 'view-login') navbar.classList.add('hidden');
+                else navbar.classList.remove('hidden');
             },
 
             toggleLoading: function(show) {
                 const el = document.getElementById('loading-overlay');
-                show ? el.classList.remove('hidden') : el.classList.add('hidden');
+                if(show) el.classList.remove('hidden');
+                else el.classList.add('hidden');
             }
         };
 
-        document.addEventListener('DOMContentLoaded', () => adminApp.init());
+        // Start
+        document.addEventListener('DOMContentLoaded', () => {
+            window.adminApp.init();
+        });
     </script>
 </body>
 </html>
