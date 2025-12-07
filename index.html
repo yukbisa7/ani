@@ -3,52 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anichin Clone - Real Popularity</title>
+    <title>Anichin Clone - Nonton Donghua</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --bg-dark: #1a1a1a; --primary: #f97316; }
         body { background-color: #111; color: #eee; font-family: sans-serif; }
-        
-        /* Effects */
         .poster-card { transition: transform 0.2s; }
         .poster-card:hover { transform: translateY(-4px); z-index: 2; }
         
-        /* Badges */
         .badge { position: absolute; font-size: 0.65rem; font-weight: bold; padding: 3px 6px; color: white; z-index: 5; }
         .badge-type { top: 0; right: 0; background: var(--primary); border-bottom-left-radius: 4px; }
         .badge-ep { bottom: 0; left: 0; background: #ef4444; border-top-right-radius: 4px; }
         .badge-sub { bottom: 0; right: 0; background: #eab308; color: black; border-top-left-radius: 4px; }
-
-        /* Sidebar Rank */
+        
         .rank-num { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: #333; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
         .rank-1 { background: #ffd700; color: black; }
         .rank-2 { background: #c0c0c0; color: black; }
         .rank-3 { background: #cd7f32; color: black; }
-
+        
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
-
-        h2.section-title { border-left: 4px solid var(--primary); padding-left: 12px; margin-bottom: 20px; font-weight: 700; font-size: 1.25rem; color: white; text-transform: uppercase; }
         
+        h2.section-title { border-left: 4px solid var(--primary); padding-left: 12px; margin-bottom: 20px; font-weight: 700; font-size: 1.25rem; color: white; text-transform: uppercase; }
         .tab-btn.active { background-color: #ea580c; color: white; }
         .tab-btn { background-color: #333; color: #9ca3af; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
-    <!-- NAVBAR -->
     <header class="bg-[#1f1f1f] border-b border-[#333] sticky top-0 z-50 shadow-md">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <a href="index.html" onclick="app.nav(event, 'home')" class="text-2xl font-extrabold text-white tracking-tighter hover:scale-105 transition">
                 ANI<span class="text-orange-500">CHIN</span>
             </a>
-            
             <div class="hidden md:flex bg-[#121212] border border-[#333] rounded overflow-hidden w-1/3">
                 <input type="text" placeholder="Cari..." class="bg-transparent px-4 py-1.5 text-sm text-gray-300 w-full focus:outline-none">
                 <button class="bg-[#333] px-3 text-gray-400"><i class="fas fa-search"></i></button>
             </div>
-            
             <nav class="flex gap-5 text-sm font-bold text-gray-400">
                 <a href="index.html" onclick="app.nav(event, 'home')" class="hover:text-orange-500 transition">HOME</a>
                 <a href="#" onclick="app.nav(event, 'genre')" class="hover:text-orange-500 transition">GENRE</a>
@@ -57,40 +49,26 @@
         </div>
     </header>
 
-    <!-- CONTENT -->
     <div class="container mx-auto px-4 py-6 flex flex-col lg:flex-row gap-8 flex-grow">
-        
-        <!-- MAIN VIEW -->
         <main class="w-full lg:w-3/4">
             <div id="main-view">
-                <div class="flex justify-center items-center h-64">
-                    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-500"></div>
-                </div>
+                <div class="flex justify-center items-center h-64"><div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-500"></div></div>
             </div>
         </main>
-
-        <!-- SIDEBAR -->
         <aside class="w-full lg:w-1/4">
             <div class="bg-[#1f1f1f] border border-[#333] rounded-lg p-4 sticky top-20">
                 <h3 class="font-bold text-white mb-4 border-b border-[#333] pb-2 text-sm uppercase">Paling Banyak Dilihat</h3>
-                
                 <div class="grid grid-cols-3 gap-1 mb-4 text-[10px] font-bold">
                     <button onclick="app.renderSidebar('views')" id="tab-views" class="tab-btn active py-1 rounded transition">POPULAR</button>
                     <button onclick="app.renderSidebar('az')" id="tab-az" class="tab-btn py-1 rounded transition">A-Z</button>
                     <button onclick="app.renderSidebar('new')" id="tab-new" class="tab-btn py-1 rounded transition">NEW</button>
                 </div>
-
-                <div id="sidebar-content" class="space-y-4">
-                    <p class="text-xs text-gray-500">Memuat...</p>
-                </div>
+                <div id="sidebar-content" class="space-y-4"><p class="text-xs text-gray-500">Memuat...</p></div>
             </div>
         </aside>
-
     </div>
 
-    <footer class="bg-[#1f1f1f] border-t border-[#333] py-6 mt-8 text-center text-gray-500 text-sm">
-        <p>&copy; 2025 Anichin Clone.</p>
-    </footer>
+    <footer class="bg-[#1f1f1f] border-t border-[#333] py-6 mt-8 text-center text-gray-500 text-sm"><p>&copy; 2025 Anichin Clone.</p></footer>
 
     <script>
         const API_URL = 'https://hosting.nakibo8225.workers.dev/json/b22b00540aee';
@@ -103,59 +81,23 @@
                     const res = await fetch(API_URL);
                     const json = await res.json();
                     this.data = json.titles || [];
-                    
-                    // Render Default Sidebar (Berdasarkan Views Terbanyak)
                     this.renderSidebar('views');
-                    
                     this.handleRouting();
                     window.onpopstate = () => this.handleRouting();
                 } catch (e) {
-                    console.error(e);
                     document.getElementById('main-view').innerHTML = `<p class="text-red-500 text-center">Gagal memuat data.</p>`;
                 }
             },
 
-            // --- VIEW COUNTER LOGIC (REAL) ---
-            incrementView: async function(slug) {
-                console.log("Menambahkan view untuk:", slug);
-                
-                // 1. Update data lokal biar sidebar langsung berubah di mata user
-                const animeLocal = this.data.find(t => t.slug === slug);
-                if (animeLocal) {
-                    animeLocal.views = (animeLocal.views || 0) + 1;
-                }
-
-                // 2. Kirim update ke Server (Background process)
-                try {
-                    // Kita harus fetch data terbaru dulu dari server untuk menghindari overwrite data orang lain
-                    const res = await fetch(API_URL);
-                    const freshData = await res.json();
-                    
-                    const animeIndex = freshData.titles.findIndex(t => t.slug === slug);
-                    if (animeIndex !== -1) {
-                        // Tambah Views
-                        freshData.titles[animeIndex].views = (freshData.titles[animeIndex].views || 0) + 1;
-                        
-                        // Simpan Balik ke Server
-                        await fetch(API_URL, {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify(freshData)
-                        });
-                        console.log("View berhasil disimpan ke server.");
-                    }
-                } catch (error) {
-                    console.error("Gagal update view ke server:", error);
-                }
-            },
-
             // --- ROUTING ---
-            nav: function(e, page, slug = null, ep = null) {
+            nav: function(e, page, p1 = null, p2 = null) {
                 if(e) e.preventDefault();
                 let url = 'index.html';
-                if (page === 'anime') url = `?page=anime&slug=${slug}`;
-                else if (page === 'watch') url = `?page=watch&slug=${slug}&ep=${ep}`;
-                else if (page === 'genre') url = `?page=genre`;
+                
+                // P1 bisa jadi slug atau genre, P2 bisa jadi episode
+                if (page === 'anime') url = `?page=anime&slug=${p1}`;
+                else if (page === 'watch') url = `?page=watch&slug=${p1}&ep=${p2}`;
+                else if (page === 'genre') url = p1 ? `?page=genre&q=${p1}` : `?page=genre`;
                 else if (page === 'schedule') url = `?page=schedule`;
                 
                 window.history.pushState({}, '', url);
@@ -163,175 +105,165 @@
             },
 
             handleRouting: function() {
-                const p = new URLSearchParams(window.location.search);
-                const page = p.get('page');
-                const slug = p.get('slug');
-                const ep = p.get('ep');
+                const params = new URLSearchParams(window.location.search);
+                const page = params.get('page');
+                const slug = params.get('slug');
+                const ep = params.get('ep');
+                const q = params.get('q'); // Query untuk genre
 
                 window.scrollTo(0,0);
 
                 if (!page) this.renderHome();
-                else if (page === 'anime') {
-                    this.renderDetail(slug);
-                    this.incrementView(slug); // TAMBAH VIEW SAAT BUKA DETAIL
-                }
-                else if (page === 'watch') {
-                    this.renderWatch(slug, ep);
-                    // Opsional: Bisa tambah view juga saat nonton, tapi biasanya saat buka detail sudah cukup.
-                }
-                else if (page === 'genre') this.renderGenrePage();
+                else if (page === 'anime') { this.renderDetail(slug); this.incrementView(slug); }
+                else if (page === 'watch') this.renderWatch(slug, ep);
+                // PERBAIKAN: Jika ada parameter Q, tampilkan hasil filter, jika tidak tampilkan list genre
+                else if (page === 'genre') q ? this.renderGenreResult(q) : this.renderGenrePage(); 
                 else if (page === 'schedule') this.renderSchedulePage();
                 else this.renderHome();
             },
 
-            // --- SIDEBAR REAL SORTING ---
-            renderSidebar: function(type) {
-                // Update Button Style
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                if(document.getElementById(`tab-${type}`)) {
-                    document.getElementById(`tab-${type}`).classList.add('active');
-                }
-
-                const list = document.getElementById('sidebar-content');
-                let sorted = [...this.data];
-
-                // LOGIKA PENGURUTAN NYATA
-                if (type === 'views') {
-                    // Urutkan berdasarkan property 'views' (Terbanyak ke terkecil)
-                    sorted.sort((a,b) => (b.views || 0) - (a.views || 0));
-                } else if (type === 'az') {
-                    sorted.sort((a,b) => a.title.localeCompare(b.title));
-                } else if (type === 'new') {
-                    // Karena kita gak punya tanggal upload real, kita balik arraynya (asumsi input terakhir = terbaru)
-                    sorted.reverse();
-                }
-
-                list.innerHTML = sorted.slice(0, 10).map((anime, idx) => {
-                    const rank = idx + 1;
-                    const rankColor = rank <= 3 ? `rank-${rank}` : 'bg-[#333] text-white';
-                    const viewCount = anime.views || 0; // Tampilkan 0 jika belum ada view
-                    
-                    return `
-                        <a href="?page=anime&slug=${anime.slug}" onclick="app.nav(event, 'anime', '${anime.slug}')" class="flex gap-3 items-center group">
-                            <div class="rank-num flex-shrink-0 ${rankColor}">${rank}</div>
-                            <div class="w-12 h-16 flex-shrink-0 rounded overflow-hidden">
-                                <img src="${anime.poster}" class="w-full h-full object-cover">
-                            </div>
-                            <div class="min-w-0 flex-grow">
-                                <h4 class="text-sm font-bold text-white truncate group-hover:text-orange-500 transition">${anime.title}</h4>
-                                <div class="flex justify-between items-center mt-1">
-                                    <div class="text-[10px] text-gray-500">${anime.status}</div>
-                                    <div class="text-[10px] text-orange-500 font-bold">
-                                        <i class="fas fa-eye"></i> ${viewCount}
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    `;
-                }).join('');
+            incrementView: async function(slug) {
+                const animeLocal = this.data.find(t => t.slug === slug);
+                if (animeLocal) animeLocal.views = (animeLocal.views || 0) + 1;
+                try {
+                    const res = await fetch(API_URL); const fresh = await res.json();
+                    const idx = fresh.titles.findIndex(t => t.slug === slug);
+                    if (idx !== -1) {
+                        fresh.titles[idx].views = (fresh.titles[idx].views || 0) + 1;
+                        await fetch(API_URL, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(fresh)});
+                    }
+                } catch (e) { console.error("Err view"); }
             },
 
-            // --- PAGES ---
+            renderSidebar: function(type) {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                if(document.getElementById(`tab-${type}`)) document.getElementById(`tab-${type}`).classList.add('active');
+                
+                let sorted = [...this.data];
+                if (type === 'views') sorted.sort((a,b) => (b.views || 0) - (a.views || 0));
+                else if (type === 'az') sorted.sort((a,b) => a.title.localeCompare(b.title));
+                else if (type === 'new') sorted.reverse();
+
+                document.getElementById('sidebar-content').innerHTML = sorted.slice(0, 10).map((anime, idx) => `
+                    <a href="?page=anime&slug=${anime.slug}" onclick="app.nav(event, 'anime', '${anime.slug}')" class="flex gap-3 items-center group">
+                        <div class="rank-num flex-shrink-0 ${idx < 3 ? `rank-${idx+1}` : 'bg-[#333] text-white'}">${idx+1}</div>
+                        <div class="w-12 h-16 flex-shrink-0 rounded overflow-hidden"><img src="${anime.poster}" class="w-full h-full object-cover"></div>
+                        <div class="min-w-0 flex-grow">
+                            <h4 class="text-sm font-bold text-white truncate group-hover:text-orange-500 transition">${anime.title}</h4>
+                            <div class="flex justify-between items-center mt-1">
+                                <div class="text-[10px] text-gray-500">${anime.status}</div>
+                                <div class="text-[10px] text-orange-500 font-bold"><i class="fas fa-eye"></i> ${anime.views || 0}</div>
+                            </div>
+                        </div>
+                    </a>
+                `).join('');
+            },
+
+            // --- PAGES RENDERER ---
             renderHome: function() {
-                // Di Home, kita urutkan berdasarkan update terakhir (simulasi: data original)
-                // Movies dipisah
                 const movies = this.data.filter(t => t.title.toLowerCase().includes('movie'));
                 const series = this.data.filter(t => !t.title.toLowerCase().includes('movie'));
-
                 document.getElementById('main-view').innerHTML = `
                     <h2 class="section-title">Latest Release</h2>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-8">
-                        ${series.map(i => this.createCard(i)).join('')}
-                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-8">${series.map(i => this.createCard(i)).join('')}</div>
                     <h2 class="section-title">Movies</h2>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        ${movies.length ? movies.map(i => this.createCard(i, 'Movie')).join('') : '<p class="text-gray-500 text-sm">Belum ada movie.</p>'}
-                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">${movies.length ? movies.map(i => this.createCard(i, 'Movie')).join('') : '<p class="text-gray-500">Belum ada movie.</p>'}</div>
                 `;
             },
 
             renderDetail: function(slug) {
                 const anime = this.data.find(t => t.slug === slug);
                 if(!anime) return;
-                
                 const epList = (anime.episodes || []).map(ep => `
-                    <a href="?page=watch&slug=${anime.slug}&ep=${ep.slug}" 
-                       onclick="app.nav(event, 'watch', '${anime.slug}', '${ep.slug}')"
+                    <a href="?page=watch&slug=${anime.slug}&ep=${ep.slug}" onclick="app.nav(event, 'watch', '${anime.slug}', '${ep.slug}')"
                        class="flex justify-between items-center bg-[#252525] hover:bg-[#333] p-3 rounded border border-[#333] group transition">
                         <span class="text-sm font-semibold text-gray-300 group-hover:text-orange-500"><i class="fas fa-play-circle text-xs mr-2"></i> ${ep.title}</span>
                         <span class="text-[10px] text-gray-500 border border-gray-600 px-1 rounded">SUB</span>
-                    </a>
-                `).join('');
+                    </a>`).join('');
 
                 document.getElementById('main-view').innerHTML = `
                     <div class="bg-[#1f1f1f] rounded-lg border border-[#333] overflow-hidden">
                         <div class="p-6 flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-[220px] flex-shrink-0 relative">
                                 <img src="${anime.poster}" class="w-full rounded shadow-lg">
-                                <div class="absolute top-2 left-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
-                                    <i class="fas fa-eye text-orange-500"></i> ${anime.views || 0} Views
-                                </div>
+                                <div class="absolute top-2 left-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded"><i class="fas fa-eye text-orange-500"></i> ${anime.views || 0} Views</div>
                             </div>
                             <div class="flex-grow">
                                 <h1 class="text-3xl font-bold text-white mb-2">${anime.title}</h1>
                                 <div class="flex flex-wrap gap-2 mb-4"><span class="bg-orange-600 text-white text-xs px-2 py-1 rounded">DONGHUA</span><span class="bg-[#333] text-gray-300 text-xs px-2 py-1 rounded">${anime.status}</span></div>
                                 <p class="text-gray-400 text-sm mb-4 border-b border-[#333] pb-4">${anime.description}</p>
                                 <div class="text-xs text-gray-500"><strong class="text-gray-300">Genre:</strong> ${anime.genre.join(', ')}</div>
+                                <div class="text-xs text-gray-500 mt-2"><strong class="text-gray-300">Jadwal:</strong> ${anime.schedule ? anime.schedule.day + ', ' + anime.schedule.time : 'Tidak tentu'}</div>
                             </div>
                         </div>
                         <div class="bg-[#181818] p-4 border-t border-[#333]">
                             <h3 class="text-white font-bold mb-4 flex items-center gap-2"><span class="bg-orange-600 w-1 h-5 rounded-full"></span> List Episode</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[500px] overflow-y-auto custom-scroll pr-2">
-                                ${epList.length ? epList : '<p class="text-gray-500 text-sm">Belum ada episode.</p>'}
-                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[500px] overflow-y-auto custom-scroll pr-2">${epList.length ? epList : '<p class="text-gray-500">Belum ada episode.</p>'}</div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             },
 
             renderWatch: function(tSlug, epSlug) {
                 const anime = this.data.find(t => t.slug === tSlug);
                 const ep = anime ? anime.episodes.find(e => e.slug === epSlug) : null;
                 if(!ep) return;
+                let src = ep.video_url; if(src.includes('youtube')&&!src.includes('autoplay')) src+=(src.includes('?')?'&':'?')+'autoplay=1';
                 
-                let src = ep.video_url;
-                if(src.includes('youtube') && !src.includes('autoplay')) src += (src.includes('?') ? '&' : '?') + 'autoplay=1';
-
                 document.getElementById('main-view').innerHTML = `
                     <div class="mb-4"><a href="?page=anime&slug=${anime.slug}" onclick="app.nav(event, 'anime', '${anime.slug}')" class="text-gray-400 hover:text-white text-sm"><i class="fas fa-arrow-left"></i> Kembali</a></div>
                     <div class="bg-black rounded border border-[#333] overflow-hidden shadow-2xl mb-4">
                         <div class="relative w-full" style="padding-top: 56.25%"><iframe src="${src}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allowfullscreen></iframe></div>
                     </div>
-                    <div class="bg-[#1f1f1f] p-4 rounded border border-[#333] mb-6">
-                        <h1 class="text-lg font-bold text-orange-500 mb-1">${anime.title}</h1>
-                        <h2 class="text-md text-white font-normal">${ep.title}</h2>
-                    </div>
-                `;
+                    <div class="bg-[#1f1f1f] p-4 rounded border border-[#333] mb-6"><h1 class="text-lg font-bold text-orange-500 mb-1">${anime.title}</h1><h2 class="text-md text-white font-normal">${ep.title}</h2></div>`;
             },
 
             renderGenrePage: function() {
                 const allGenres = [...new Set(this.data.flatMap(t => t.genre))].sort();
                 document.getElementById('main-view').innerHTML = `
-                    <h2 class="section-title">Daftar Genre</h2>
+                    <h2 class="section-title">DAFTAR GENRE</h2>
                     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-8">
-                        ${allGenres.map(g => `<div class="bg-[#252525] hover:bg-orange-600 p-3 rounded text-center cursor-pointer transition text-sm font-bold border border-[#333]">${g}</div>`).join('')}
-                    </div>
-                `;
+                        ${allGenres.map(g => `<div onclick="app.nav(event, 'genre', '${g}')" class="bg-[#252525] hover:bg-orange-600 p-3 rounded text-center cursor-pointer transition text-sm font-bold border border-[#333]">${g}</div>`).join('')}
+                    </div>`;
             },
 
+            // --- PERBAIKAN: HALAMAN HASIL FILTER GENRE ---
+            renderGenreResult: function(genreName) {
+                // Filter anime yang punya genre ini
+                const filtered = this.data.filter(t => t.genre.some(g => g.toLowerCase() === genreName.toLowerCase()));
+                
+                document.getElementById('main-view').innerHTML = `
+                    <div class="mb-4"><a href="?page=genre" onclick="app.nav(event, 'genre')" class="text-gray-400 hover:text-white text-sm"><i class="fas fa-arrow-left"></i> Kembali ke Daftar Genre</a></div>
+                    <h2 class="section-title">Genre: ${genreName}</h2>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        ${filtered.length > 0 
+                            ? filtered.map(i => this.createCard(i)).join('') 
+                            : '<p class="col-span-full text-gray-500 text-center py-10">Tidak ada anime dengan genre ini.</p>'}
+                    </div>`;
+            },
+
+            // --- PERBAIKAN: JADWAL REAL ---
             renderSchedulePage: function() {
                 const days = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
                 document.getElementById('main-view').innerHTML = `
-                    <h2 class="section-title">Jadwal Rilis</h2>
+                    <h2 class="section-title">JADWAL RILIS</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        ${days.map(day => `
+                        ${days.map(day => {
+                            // Cari anime di hari ini
+                            const animeToday = this.data.filter(t => t.schedule && t.schedule.day === day);
+                            return `
                             <div class="bg-[#1f1f1f] border border-[#333] rounded overflow-hidden">
                                 <div class="bg-[#252525] p-2 text-center font-bold text-orange-500 border-b border-[#333]">${day}</div>
-                                <div class="p-3 text-center text-xs text-gray-500">Belum ada data jadwal.</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
+                                <div class="p-3 space-y-2 min-h-[100px]">
+                                    ${animeToday.length > 0 ? animeToday.map(t => `
+                                        <div class="flex items-center gap-2 text-xs text-gray-300 border-b border-[#333] pb-2 last:border-0 group">
+                                            <span class="text-orange-500 font-bold w-10">${t.schedule.time}</span>
+                                            <span class="truncate hover:text-white cursor-pointer group-hover:text-orange-400" onclick="app.nav(null, 'anime', '${t.slug}')">${t.title}</span>
+                                        </div>
+                                    `).join('') : '<div class="text-center text-xs text-gray-600 italic mt-4">Libur</div>'}
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>`;
             },
 
             createCard: function(anime, type="Donghua") {
@@ -340,23 +272,13 @@
                     <a href="?page=anime&slug=${anime.slug}" onclick="app.nav(event, 'anime', '${anime.slug}')" class="poster-card block bg-[#252525] rounded overflow-hidden relative">
                         <div class="relative w-full pb-[140%]">
                             <img src="${anime.poster}" class="absolute inset-0 w-full h-full object-cover">
-                            <span class="badge badge-type">${type}</span>
-                            <span class="badge badge-ep">Ep ${epCount}</span>
-                            <span class="badge badge-sub">Sub</span>
+                            <span class="badge badge-type">${type}</span><span class="badge badge-ep">Ep ${epCount}</span><span class="badge badge-sub">Sub</span>
                             <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-40 transition flex items-center justify-center"><i class="fas fa-play text-white text-3xl opacity-0 hover:opacity-100 transition transform scale-50 hover:scale-100"></i></div>
                         </div>
-                        <div class="p-3">
-                            <h3 class="text-sm font-bold text-gray-200 line-clamp-2 leading-tight group-hover:text-orange-500 transition">${anime.title}</h3>
-                            <div class="text-[10px] text-gray-500 mt-2 flex justify-between items-center">
-                                <span>${anime.status}</span>
-                                <span class="flex items-center gap-1"><i class="fas fa-eye text-orange-500"></i> ${anime.views || 0}</span>
-                            </div>
-                        </div>
-                    </a>
-                `;
+                        <div class="p-3"><h3 class="text-sm font-bold text-gray-200 line-clamp-2 leading-tight group-hover:text-orange-500 transition">${anime.title}</h3></div>
+                    </a>`;
             }
         };
-
         document.addEventListener('DOMContentLoaded', () => app.init());
     </script>
 </body>
